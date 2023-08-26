@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+{% block content%}
+<link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+<style>
+    a {
+        text-decoration: none;
+    }
+    .window {
+      width: 100px;
+      height: 100px;
+      padding: 10px;
+      border: 1px solid #000;
+      overflow: auto;
+    }
+    .window p {
+         text-align: justify;
+        font-family: "Open Sans", sans-serif;
+            font-size: 14px;
+
+            font-weight: b200;
+            color: #333333;
+        }
+</style>
+   
+    <body>
+        <header>
+          <h1>Brain Tumor Segmentation DeepLearning  Project</h1>
+        </header>
+        
+        <nav>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#datasets">Datasets</a></li>
+            <li><a href="#models">Models</a></li>
+            <li><a href="#Predictions">Predictions</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#contact">Contact</a></li>
+      
+          </ul>
+        </nav>
+        
+        <main>
+          <section id="about">
+            <h2>About the Project</h2>
+            <p>Brain tumor segmentation is a critical task in medical imaging that involves identifying and delineating tumor regions within brain images. The goal is to accurately outline the boundaries of tumors to aid in diagnosis, treatment planning, and monitoring the progression of brain tumors.
+
+                Medical professionals typically utilize magnetic resonance imaging (MRI) scans to visualize brain structures and detect abnormalities, including tumors. However, manually segmenting brain tumors from these scans can be time-consuming and prone to human error. Therefore, automated brain tumor segmentation methods are crucial to assist radiologists and oncologists in efficient and accurate tumor analysis.
+                
+                The brain tumor segmentation problem involves developing algorithms and models that can analyze MRI images and accurately identify the presence and location of tumors. These algorithms leverage machine learning techniques, such as deep learning, to extract meaningful features from the image data and classify different regions as tumor or non-tumor.
+                
+                The challenges in brain tumor segmentation stem from the complexity and variability of tumor shapes, sizes, and appearances. Tumors can exhibit heterogeneous characteristics, including irregular shapes, fuzzy boundaries, and varying intensities in different MRI sequences. Additionally, tumors can occur in different regions of the brain, making it necessary to account for anatomical differences across patients.
+                
+                To address these challenges, researchers and data scientists employ advanced segmentation models, including convolutional neural networks (CNNs), U-Net architectures, and other deep learning approaches. These models are trained on large datasets of annotated brain MRI scans, where experts manually label tumor regions for training and evaluation.
+                
+                The ultimate objective of brain tumor segmentation is to provide accurate tumor segmentation maps that highlight the tumor regions within brain images. This information is invaluable for treatment planning, surgical interventions, radiation therapy, and monitoring tumor growth or regression over time. By automating the segmentation process, healthcare professionals can save time, enhance diagnostic accuracy, and improve patient care in the field of neuro-oncology.</p>
+          </section>
+          
+          <section id="datasets">
+            <h2>Datasets</h2>
+            <p>The BraTS 2020 (Training + Validation) dataset is a widely used dataset in the field of brain tumor segmentation. It is part of the Multimodal Brain Tumor Segmentation Challenge (BraTS) initiative, which aims to promote and evaluate state-of-the-art algorithms for brain tumor analysis.
+
+                This dataset is specifically designed for training and validating brain tumor segmentation models. It consists of a diverse collection of multimodal magnetic resonance imaging (MRI) scans, including T1-weighted, T1-weighted with contrast enhancement (T1Gd), T2-weighted, and fluid-attenuated inversion recovery (FLAIR) images. Each scan in the dataset is associated with a corresponding ground truth segmentation map that outlines the tumor regions.
+                
+                The BraTS 2020 dataset encompasses a wide range of brain tumor types and characteristics, including low-grade gliomas (LGG) and high-grade gliomas (HGG) such as glioblastoma (GBM). These tumors can exhibit variations in size, shape, location, and intensity, representing the complexity and heterogeneity of real-world brain tumors.
+                
+                In addition to the MRI scans and ground truth segmentation maps, the dataset provides other clinical information, such as patient demographics and tumor histology, when available. This additional metadata enables researchers to explore correlations between tumor characteristics and segmentation performance.
+                
+                The dataset is partitioned into training and validation sets. The training set is used to train and optimize brain tumor segmentation models, while the validation set is utilized to evaluate the generalization and performance of the trained models on unseen data. This partitioning ensures that the models are robust and capable of accurately segmenting brain tumors in new cases.
+                
+                Researchers and data scientists leverage the BraTS 2020 (Training + Validation) dataset to develop and benchmark novel algorithms and models for brain tumor segmentation. By utilizing this dataset, they aim to improve the accuracy, efficiency, and clinical applicability of automated brain tumor segmentation methods, ultimately benefiting patients by facilitating more precise diagnosis, treatment planning, and monitoring of brain tumors.</p>
+          </section>
+          
+          <section id="models">
+            <h2>Models</h2>
+            <p>The given model represents a U-Net-like architecture with attention mechanisms for the task of image segmentation, specifically designed for brain tumor segmentation. The model takes an input tensor with a specified input shape and produces segmentation outputs with the specified number of classes.
+
+                The model consists of several "ma_block" modules, which are comprised of two consecutive 2D convolutional layers with batch normalization and ReLU activation. These blocks capture and enhance the features at different levels of abstraction. Max pooling layers are applied after each ma_block to downsample the feature maps.
+                
+                The attention_block module incorporates attention mechanisms by calculating attention maps between two input feature maps using 1x1 convolutions. The attention maps are used to modulate the original feature maps, allowing the model to focus on important regions while suppressing irrelevant information.
+                
+                The model also employs transpose convolutions (Conv2DTranspose) for upsampling the feature maps, followed by concatenation with the corresponding attended feature maps from earlier layers. This allows the model to reconstruct higher-resolution feature maps while retaining important contextual information.
+                
+                The final layers consist of a ma_block followed by a 1x1 convolutional layer with softmax activation to generate the segmentation outputs.
+                
+                Overall, this model architecture combines convolutional and attention mechanisms to effectively capture and localize tumor regions in brain images, making it suitable for brain tumor segmentation tasks.</p>
+          </section>
+      
+           
+          <section id="Predictions" class="predictions-section">
+            <h2>Predictions</h2>
+            <form action="/outpg" method="post">
+                <p>Flair Image Path: 
+                    <input autocomplete="on" autofocus type="text" name="flair_path" placeholder=".nii files only"> 
+                </p>
+                <p>CE Image Path:
+                    <input autocomplete="on" autofocus type="text" name="ce_path" placeholder=".nii files only">
+                </p>
+                <select name="part_of_tumor" >
+                    <option value="all_the_tumor" selected>ALL THE TUMOR</option>
+                    {% for i in menuu %}
+                        <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" name="generate" value="Generate">
+            </form>
+        </section>
+           
+ 
+          <section id="results">
+            <h2>Results</h2>
+            <p>The model was trained using MRI brain images and achieved impressive results. It achieved an accuracy of 98.9% and a dice coefficient of 0.4035, indicating excellent segmentation performance. The model also demonstrated high precision (99.24%) and sensitivity (98.55%), highlighting its ability to accurately detect and classify brain structures. Moreover, the model exhibited strong specificity (99.74%), indicating its proficiency in correctly identifying non-target regions. The validation results showed promising outcomes, with an accuracy of 96.31% and a dice coefficient of 0.2917. These results indicate the model's effectiveness in accurately segmenting brain images and have the potential to contribute to medical research and diagnosis.</p>
+          </section>
+          
+          <section id="contact">
+            <h2 style="color: #fcfcfd;">Contact</h2>
+
+            <p> You can contact us through following ways</p>
+            <p>
+                 <a href="mohanmachavarapu117@gmail.com"> 
+                    <span>&#x1F4E7;</span> mohanmachavarapu117@gmail.com
+                 </a>
+                   
+              
+              
+                <a href="tel:8008191153">
+                    <span>&#x1F4DE;</span> 8008191153
+                </a>
+             
+                <a href="https://github.com/Mohanpradeep32">
+                    <span>&#x1F5A4;</span> Mohanpradeep32
+                </a>
+              
+                <a href="https://www.linkedin.com/in/mohan-machavarapu-b00064206">
+                    <span>&#x1F4E1;</span> Mohan Machavarapu
+                </a>
+            </p>
+            
+          </section>
+        </main>
+        
+        <footer>
+          <p>&copy; Mohan Machavarapu</p>
+          <span>&#x1F4DE;</span> 
+          <span>&#x1F5A4;</span>
+          <span>&#x1F4E1;</span> 
+        </footer>
+      
+        
+      
+      </body>    
+{% endblock content %}

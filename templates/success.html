@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Image Example</title>
+</head>
+<body>
+    <h1>Successful!</h1>
+
+    <h2>Input Image</h2>
+    <img  src="{{ url_for('static', filename='images/input.jpg') }}"  >
+
+    <h2>Output Image</h2>
+    <img src="{{ url_for('static', filename='images/out_img.jpg') }}"  >
+
+    {% if tumor_exists %}
+        <h2>Tumor Exists</h2>
+    {% else %}
+        <h2>No Tumor Detected</h2>
+    {% endif %}
+
+</body>
+</html>
